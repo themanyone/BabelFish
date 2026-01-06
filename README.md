@@ -1,16 +1,13 @@
 # BabelFish
----
-<img src="bf.png" align="right">
-A voice-activated offline, off-grid universal translator
-(Douglas Adams, "The Hitchhiker's Guide to the Galaxy").
+<img src="bf.png" align="right">(Douglas Adams, "The Hitchhiker's Guide to the Galaxy").
 
-Introducing the BableFish in-ear device. It translates everything into English. Or some other language (selectable).
+A voice-activated, "organic" (free, private, open-source, offline, off-grid) universal translator, written as a minimal Bash script.
 
-You can preorder the BabelFish here. In the meantime, you can run the code on your laptop and listen in on other languages, whenever they are spoken.
+Preorder BabelFish earbuds here [Coming soon](). In the meantime, run the code on a Linux laptop, PC, or Raspberry Pi. Listen in on other languages, wherever and whenever they are spoken.
 
-## Installation. 
+## Installation
 
-You'll have to install `mimic3` if you want to hear the spoken translations. Use our upgraded version from github that supports `python 3.14`. Run `install.sh`to install to a virtual environment to ensure compatability. Or install it to the base environment like this:
+**mimic3.** None of this requires `root` access. Install as a normal user. Use [this upgraded version that supports python 3.14](https://github.com/themanyone/mimic3). Run `install.sh`to install to a virtual environment to ensure compatability. Or install it to the base environment like this:
 
 ```shell
 git clone https://github.com/themanyone/mimic3.git
@@ -25,13 +22,30 @@ CC=clang pip install .[all]
 CC=tcc pip install .[all]
 ```
 
+**whisper.cpp.** Install [whisper.cpp](https://github.com/ggml-org/whisper.cpp) according to the instructions found there.
 
+Install whisper-server as a service by copying the service file below to `$HOME/.config/systemd/user/whisper.service`. Use a different port if you prefer. Just make clients and servers agree on which port to use. The `bab` script will automatically start the whisper service only when needed.
 
-Install [whisper.cpp](https://github.com/ggml-org/whisper.cpp) according to their instructions.
+```shell
+[Unit]
+Description=Run Whisper server
+Documentation=https://github.com/openai/whisper
 
-# Testing.
+[Service]
+ExecStart=/home/k/.local/bin/whisper-server \
+-vm $USER/Downloads/src/whisper.cpp/models/ggml-silero-v6.2.0.bin --vad \
+-m $USER/Downloads/src/whisper.cpp/models/ggml-medium-q5_0.bin \
+-sns --convert --port 7777
 
-Change directory to `whisper.cpp`and run the following tests. Running these tests will determine if your installation can translate spoken text into another language. And speak it.
+[Install]
+WantedBy=default.target
+```
+
+You must run systemctl --user daemon-reload after making changes to any systemd unit files (e.g., in ~/.config/systemd/user/) to ensure the systemd user instance picks up the new configuration.
+
+# Testing
+
+Change directory to `whisper.cpp`and run the following tests to make sure the setup can hear, translate, and speak a foreign language.
 
 ```shell
 models/download-ggml-model.sh medium-q5_0
@@ -42,17 +56,17 @@ mimic3 --voice ru_RU/multi_low "И так, мои другие американ�
 
 We start the `whisper-server` with a larger model, such as `ggml-medium-q5_0.bin` when operating as a translator.
 
-Since MIMIC 3 is capable of sending audio output to a pipe, we can use `aplay` to send the sound output to another device, such as the BableFish's earphone.
+Since MIMIC 3 is capable of sending audio output to a pipe, we can use `aplay` to send the sound output to another device, such as the BableFish Bluetooth earbuds.
 
 `mimic3 "Hello world!" --stdout|aplay -D sysdefault:CARD=Generic`
 
-## Configuration.
+## Configuration
 
-Edit `bab`. Find the line containing `aplay` and change the `--device` to your Bablefish's Bluetooth audio device. Use `aplay -L` to discover it.
+Edit `bab`. Find the line containing `aplay` and change the `--device` to your Bablefish Bluetooth audio device. Once paired, use `aplay -L` to discover the device name.
 
 You may also comment out "# --device..." entirely and choose outputs using your desktop volume control/mixer.
 
-## Running.
+## Running
 
 Once everything is set up, tested and configured, our universal translator should be up and running.The device's language-selection dial should start `bab` with the desired language to translate into. But we can run `bab` from the command line, e.g. `bab es_ES/m-ailabs_low` or `bab ru_RU/multi_low`.
 
