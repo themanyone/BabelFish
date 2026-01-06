@@ -1,23 +1,21 @@
 #!/bin/bash
 # Copyright (C) 2026 by Henry Kroll III, www.thenerdshow.com
 #
-# With code contributions by Matthew Rensberry
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as published
+#    by the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
 #
-# This is free software.  You may redistribute it under the terms
-# of the Apache license and the GNU General Public License Version
-# 2 or at your option any later version.
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public
-# License along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 if [[ "$1" == "-h" ]]; then echo <<EOF "\
-usage: `basename $0` [lang] [mimic3 ops]   example: `basename $0` es_ES/m-ailabs_low -s karen_savage
+usage: `basename $0` [lang] [mimic3 options]   example: `basename $0` es_ES/m-ailabs_low -s karen_savage
     See 'mimic3 --voices' for a full list.
     Use 'mimic3-download [lang]' to get them."
 EOF
@@ -83,10 +81,10 @@ while true; do
 
     # Listen to the mic.
     # The `1 0.2 4%` part of this command trims one clip of silence
-    # from the beginning. 4% of max volume is considered silence here.
-    # `1 1.0 2%` stops after a 1.0 second pause in speech.
-    # If recording never stops, increase sound threshold from 2%
-    # to 5% or more. This can happen with poor recording equipment
+    # from the beginning. 6% of max volume is considered silence here.
+    # `1 1.0 5%` stops after a 1.0 second pause in speech.
+    # If recording never stops, increase sound threshold
+    # to 10% or more. This can happen with poor recording equipment
     # or noisy environments with heaters and fans going.
 
     rec --guard --norm -c 1 -r 22050 -t mp3 "$tmp" silence 1 0.2 6% 1 1.0 5%

@@ -1,8 +1,10 @@
 # BabelFish
+---
+<img src="bf.png" align="right">
 A voice-activated offline, off-grid universal translator
 (Douglas Adams, "The Hitchhiker's Guide to the Galaxy").
 
-Introducing the BableFish in-ear device. It translates everything into English. Or some other language (selectable). 
+Introducing the BableFish in-ear device. It translates everything into English. Or some other language (selectable).
 
 You can preorder the BabelFish here. In the meantime, you can run the code on your laptop and listen in on other languages, whenever they are spoken.
 
