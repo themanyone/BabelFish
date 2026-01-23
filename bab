@@ -64,8 +64,8 @@ trans(){
             && [[ "$extracted_text" != *'['* ]]; then
              # send audio to default (headphone if plugged-in)
              # If it doesn't work, use `aplay -L` to list devices
-            mimic3 --voice "$lang" "$@" "$extracted_text" \
-            --stdout|aplay --device sysdefault:CARD=Generic
+            mimic3 --voice "$lang" "$@" "$extracted_text"
+            # --stdout|aplay --device sysdefault:CARD=Generic
         fi &
     done < "$audio_fifo"
     #cleanup

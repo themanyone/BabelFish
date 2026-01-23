@@ -16,7 +16,9 @@ pip install --upgrade pip wheel setuptools
 pip install -r requirements.txt
 pip install .[all]
 
-# If some deps fail to build with `gcc`
+# If some deps fail to build with bleeding-edge `gcc`
+CC=gcc-14 pip install .[all]
+# or
 CC=clang pip install .[all]
 # or
 CC=tcc pip install .[all]
