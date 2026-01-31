@@ -16,7 +16,6 @@
 
 # Voice speed 1.5
 speed=1.5
-len=$(bc <<< "scale=2; 1/$speed")
 
 if [[ "$1" == "-h" ]]; then echo <<EOF "\
 usage: `basename $0` [lang] [mimic3 options]   example: `basename $0` es_ES/m-ailabs_low -s karen_savage
@@ -66,10 +65,14 @@ trans(){
         # Thanks for watching! seems to occur frequently due to noise.
         if [[ ! "$extracted_text" =~ "Thanks for watching!" ]] \
             && [[ "$extracted_text" != *'['* ]]; then
-             # send audio to default (headphone if plugged-in)
-             # If it doesn't work, use `aplay -L` to list devices
+            # send audio to default (headphone if plugged-in)
+            len=$(bc <<< "scale=2; 1/$speed")
             mimic3 --length-scale "$len" --voice "$lang" "$@" "$extracted_text" 2>/dev/null
-            # --stdout|aplay --device sysdefault:CARD=Generic
+            # If there is feedback of audio output contaminating the input,
+            # Use the Volume Control's Mixer to change output to another device.
+            # Or use mimic3's `--stdout` option & pipe output to `aplay`
+            # Use `aplay -L` to get device name, instead of sysdefault
+            # mimic3 ... --stdout|aplay --device sysdefault:CARD=Generic
         fi &
     done < "$audio_fifo"
     #cleanup

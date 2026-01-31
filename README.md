@@ -26,7 +26,16 @@ CC=tcc pip install .[all]
 
 **whisper.cpp.** Install [whisper.cpp](https://github.com/ggml-org/whisper.cpp) according to the instructions found there.
 
-Install whisper-server as a service by copying the service file below to `$HOME/.config/systemd/user/whisper.service`. Use a different port if you prefer. Just make clients and servers agree on which port to use. The `bab` script will automatically start the whisper service only when needed.
+Be sure to download the model
+* `ggml-medium-q5_0.bin`
+
+models as well. Then, in `.bashrc`, set the WHISPER_MODELS directory to the location where you stored the models:
+
+```shell
+export WHISPER_MODELS=[location of your whisper models]
+```
+
+Install whisper-server as a service by copying the service file below to `$HOME/.config/systemd/user/whisper.service`. Use a different port if you prefer. Just make clients and servers agree on which port to use. The `bab` script will automatically start the whisper service.
 
 ```shell
 [Unit]
@@ -34,9 +43,8 @@ Description=Run Whisper server
 Documentation=https://github.com/openai/whisper
 
 [Service]
-ExecStart=/home/k/.local/bin/whisper-server \
--vm $USER/Downloads/src/whisper.cpp/models/ggml-silero-v6.2.0.bin --vad \
--m $USER/Downloads/src/whisper.cpp/models/ggml-medium-q5_0.bin \
+ExecStart=whisper-server \
+-m $WHISPER_MODELS/ggml-medium-q5_0.bin \
 -sns --convert --port 7777
 
 [Install]
@@ -64,9 +72,7 @@ Since `mimic3` is capable of sending audio output to a pipe, we can use `aplay` 
 
 ## Configuration
 
-Edit `bab`. Find the line containing `aplay` and change the `--device` to your Bablefish Bluetooth audio device. Once paired, use `aplay -L` to discover the device name.
-
-You may also comment out "# --device..." entirely and choose outputs using your desktop volume control/mixer.
+To prevent feedback, use the Volume Control's Mixer to route sound output to another device. Or edit `bab`. Find the line containing `aplay` and change the `--device` to your Bablefish Bluetooth audio device. Once paired, use `aplay -L` to discover the device name.
 
 ## Running
 
