@@ -13,7 +13,11 @@
 #
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-#
+
+# Voice speed 1.5
+speed=1.5
+len=$(bc <<< "scale=2; 1/$speed")
+
 if [[ "$1" == "-h" ]]; then echo <<EOF "\
 usage: `basename $0` [lang] [mimic3 options]   example: `basename $0` es_ES/m-ailabs_low -s karen_savage
     See 'mimic3 --voices' for a full list.
@@ -64,7 +68,7 @@ trans(){
             && [[ "$extracted_text" != *'['* ]]; then
              # send audio to default (headphone if plugged-in)
              # If it doesn't work, use `aplay -L` to list devices
-            mimic3 --voice "$lang" "$@" "$extracted_text"
+            mimic3 --length-scale "$len" --voice "$lang" "$@" "$extracted_text" 2>/dev/null
             # --stdout|aplay --device sysdefault:CARD=Generic
         fi &
     done < "$audio_fifo"
@@ -87,7 +91,7 @@ while true; do
     # to 10% or more. This can happen with poor recording equipment
     # or noisy environments with heaters and fans going.
 
-    rec --guard --norm -c 1 -r 22050 -t mp3 "$tmp" silence 1 0.2 6% 1 1.0 5%
+    rec --guard --norm -c 1 -r 22050 -t mp3 "$tmp" silence 1 0.2 10% 1 0.3 10% 2>/dev/null
 
     # echo temporary audio file name to transcription queue
     echo "$tmp"
