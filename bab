@@ -87,14 +87,14 @@ while true; do
     trap 'rm "$tmp" ; exit' INT
 
     # Listen to the mic.
-    # The `1 0.2 4%` part of this command trims one clip of silence
-    # from the beginning. 6% of max volume is considered silence here.
-    # `1 1.0 5%` stops after a 1.0 second pause in speech.
+    # The `1 0.2 10%` part of this command trims one clip of silence
+    # from the beginning. 10% of max volume is considered silence here.
+    # `1 0.2 10%` stops after a 1.0 second pause in speech.
     # If recording never stops, increase sound threshold
-    # to 10% or more. This can happen with poor recording equipment
+    # to 15% or more. This can happen with poor recording equipment
     # or noisy environments with heaters and fans going.
 
-    rec --guard --norm -c 1 -r 22050 -t mp3 "$tmp" silence 1 0.2 10% 1 0.3 10% 2>/dev/null
+    rec --guard --norm -c 1 -r 22050 -t mp3 "$tmp" silence 1 0.2 10% 1 0.2 10% 2>/dev/null
 
     # echo temporary audio file name to transcription queue
     echo "$tmp"
